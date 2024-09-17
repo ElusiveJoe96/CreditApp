@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clients</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+</head>
+<body>
+<header class="d-flex justify-content-center py-3">
+    <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/" class="nav-link text-success">Главная</a></li>
+        <li class="nav-item"><a href="/requests/new" class="nav-link text-success">Оформить заявку</a></li>
+        <li class="nav-item"><a href="/clients" class="nav-link active bg-success" aria-current="page">Список
+            клиентов</a></li>
+        <li class="nav-item"><a href="/requests" class="nav-link text-success">Список заявок</a></li>
+        <li class="nav-item"><a href="/contracts" class="nav-link text-success">Список договоров</a></li>
+    </ul>
+</header>
+
+<main>
+    <div class="container mt-3">
+        <div class="py-1 text-center">
+            <h3>Список клиентов</h3>
+        </div>
+        <div th:if="${#lists.isEmpty(clients)}">
+            <p>Клиентов нет</p>
+        </div>
+        <form th:method="GET" th:action="@{/clients/search}" class="col-sm-6 mx-auto text-center">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <select class="form-select" id="searchType" name="searchType" required>
+                        <option value="FIO">По ФИО</option>
+                        <option value="PASSPORT">По паспортным данным</option>
+                        <option value="PHONE">По номеру телефона</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Поиск"
+                           required>
+                </div>
+                <div class="col-md-3">
+                    <button class="w-100 btn btn-success" type="submit">Найти</button>
+                </div>
+            </div>
+        </form>
+        <div class="row mx-auto text-center mb-2 mt-2">
+            <div class="col">
+                <a th:href="@{/clients}" class="btn btn-success">Сбросить фильтр поиска</a>
+            </div>
+        </div>
+        <table class="table table-hover" th:unless="${#lists.isEmpty(clients)}">
+            <thead>
+            <tr>
+                <th>ФИО</th>
+                <th>Паспортные данные</th>
+                <th>Адрес прописки</th>
+                <th>Контактный телефон</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="client : ${clients}">
+                <td>
+                    <a th:href="@{/clients/{id}(id=${client.id})}"
+                       th:text="${client.firstName} + ' ' + ${client.middleName} + ' ' + ${client.lastName}">Customer</a>
+                </td>
+                <td th:text="${client.passportData}"></td>
+                <td th:text="${client.address}"></td>
+                <td>
+                    <a>+7<span th:text="${client.phoneNumber}"></span></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+</body>
+</html>
